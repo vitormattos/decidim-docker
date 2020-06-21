@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+  decidim:
+    build:
+      context: .docker/decidim
+      args:
+        RUBY_VERSION: 2.5.3
+        BUNDLER_VERSION: 1.17.3
+        TZ: America/Sao_Paulo
+    # entrypoint: /usr/local/bin/entrypoint.sh
+    # command: decidim
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/decidim/
+      - .docker/volumes/decidim:/usr/local/decidim-volume
+    links:
+      - pg
+      - redis
+    env_file:
+      - .env
+  pg:
+    image: postgres
+    volumes:
+      - .docker/volumes/postgres/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+  redis:
+    image: redis
+    volumes:
+      - .docker/volumes/redis/data:/data
+volumes:
+  gems: {}
+  pg-data: {}
+  redis-data: {}
