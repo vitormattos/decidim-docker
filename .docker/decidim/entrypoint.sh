@@ -3,7 +3,6 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 . $NVM_DIR/nvm.sh
 if [ ! -d "app" ]; then
-    whereis bundle
     echo "Installing Decidim"
     $HOME/.rbenv/shims/decidim app
     echo 'group :production do' >> app/Gemfile
@@ -13,11 +12,9 @@ if [ ! -d "app" ]; then
     echo 'end' >> app/Gemfile
     echo 'gem "figaro"' >> app/Gemfile
     cd /decidim/app
-    whereis bundle
     bundle install
     bundle exec figaro install
     bin/rails db:create db:migrate
-    cd -
 fi
 cd /decidim/app
-bin/rails s
+bin/rails s -b 0.0.0.0
